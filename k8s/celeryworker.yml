@@ -1,0 +1,33 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: kops-celeryworker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kops-celeryworker
+  template:
+    metadata:
+      labels:
+        app: kops-celeryworker
+    spec:
+      containers:
+      - name: kops-celeryworker
+        image: neverqaz/kops-backend:v1
+        command: ["/bin/sh", "-c" ]
+        args: ["/bin/sh /docker-entrypoint.sh; /usr/local/bin/celery -A kops worker -l debug"]
+        envFrom:
+        - configMapRef:
+            name: kops-config
+        volumeMounts:
+            - mountPath: /code/backend/log
+              name: log-worker
+      volumes:
+        - name: log-worker
+          hostPath:
+            path: /kops/celeryworker/log
+        - name: config
+          configMap:
+            defaultMode: 0600
+            name: kops-config

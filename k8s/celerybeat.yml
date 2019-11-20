@@ -1,0 +1,29 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: kops-celerybeat
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kops-celerybeat
+  template:
+    metadata:
+      labels:
+        app: kops-celerybeat
+    spec:
+      containers:
+      - name: kops-celerybeat
+        image: neverqaz/kops-backend:v1
+        command: ["/bin/sh", "-c" ]
+        args: ["/bin/sh /docker-entrypoint.sh; /usr/local/bin/celery -A kops beat"]
+        envFrom:
+        - configMapRef:
+            name: kops-config
+        volumeMounts:
+            - mountPath: /code/backend/log
+              name: log-beat
+      volumes:
+        - name: log-beat
+          hostPath:
+            path: /kops/celerybeat/log

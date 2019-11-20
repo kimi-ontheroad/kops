@@ -1,0 +1,36 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: kops-ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kops-ui
+  template:
+    metadata:
+      labels:
+        app: kops-ui
+    spec:
+      containers:
+      - name: kops-ui
+        image: neverqaz/kops-front:v1
+        envFrom:
+        - configMapRef:
+            name: kops-config
+        ports:
+        - containerPort: 8080
+          name: http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kops-ui-svc
+spec:
+  ports:
+  - port: 8080
+    targetPort: 8080
+    protocol: TCP
+    name: http
+  selector:
+    app: kops-ui

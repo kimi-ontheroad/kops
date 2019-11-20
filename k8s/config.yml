@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kops-config
+data:
+  DB_HOST: "127.0.0.1"
+  DB_NAME: "kops"
+  DB_ALADDIN_NAME: "kops"
+  DB_USER: "kops"
+  DB_PASSWORD: "kops"
+  DB_PORT: "3306"
+  REDIS_HOST: "127.0.0.1"
+  REDIS_PORT: "6379"
+  REDIS_PASSWORD: "kops"
+  REDIS_DBNUM: "0"
+  API_ENDPOINT: "http://kops.k8s.com"
+  BACKEND: "kops-backend-svc:8000"

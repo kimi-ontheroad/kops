@@ -1,0 +1,45 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: kops-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kops-backend
+  template:
+    metadata:
+      labels:
+        app: kops-backend
+    spec:
+      containers:
+      - name: kops-backend
+        envFrom:
+        - configMapRef:
+            name: kops-config
+        image: neverqaz/kops-backend:v1
+        ports:
+        - containerPort: 8000
+        volumeMounts:
+            - mountPath: /code/backend/log
+              name: log
+      volumes:
+        - name: src-log
+          hostPath:
+            path: /kops/backend/log
+        - name: config
+          configMap:
+            defaultMode: 0600
+            name: kops-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kops-backend-svc
+spec:
+  ports:
+  - port: 8000
+    targetPort: 8000
+    protocol: TCP
+  selector:
+    app: kops-backend

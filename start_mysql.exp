@@ -1,0 +1,8 @@
+#!/bin/expect
+set timeout 60
+spawn apt install -y mysql-server
+expect "New password for the MySQL \"root\" user: "
+send "kops\r"
+expect "Repeat password for the MySQL \"root\" user: "
+send "kops\r"
+interact
